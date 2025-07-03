@@ -16,6 +16,7 @@ const oAuth2Client = new google.auth.OAuth2(
   redirect_uris[0] // This will now use your Vercel URL
 );
 
+// --- Function for getAuthUrl ---
 module.exports.getAuthURL = async () => {
   /**
    *
@@ -69,6 +70,32 @@ module.exports.getAccessToken = async (event) => {
     })
     .catch ((error) => {
         // Handle error
+        return {
+            statusCode: 500,
+            body: JSON.stringify(error),
+        };
+    });
+};
+
+// --- Step 2 in 4.3 Task:  ADD NEW FUNCTION SKELETON BELOW THIS LINE for getCalendarEvents ---
+module.exports.getCalendarEvents = async (event) => {
+    return new Promise((resolve, reject) => {
+        // The logic to get the calendar events will be added here in the next step.
+        // For now, it's an empty promise
+    })
+    .then((results) => {
+        // This .then() block will handle the successful response
+        return {
+            statusCode: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Credentials': true,
+            },
+            body: JSON.stringify({events: results.data.items}),
+        };
+    })
+    .catch((error) =>{
+        // This .catch() block will handle any errors
         return {
             statusCode: 500,
             body: JSON.stringify(error),
