@@ -1,0 +1,8 @@
+# Ignore Node.js dependencies
+node_modules/
+
+# Ignore Severless Framework's build artifacts
+.serverless/
+
+# Ignore local configuration files with secrets
+config.json
