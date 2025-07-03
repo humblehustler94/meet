@@ -32,7 +32,7 @@ function App() {
     }
   };
 
-  const handleLogicClick = async () => {
+  const handleLoginClick = async () => {
     try {
       const getAuthURLEndpoint = 'https://z6j7n76eya.execute-api.eu-central-1.amazonaws.com/dev/api/get-auth-url';
       const response = await fetch(getAuthURLEndpoint);
