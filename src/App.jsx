@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react'
-//import reactLogo from './assets/react.svg'
-//import viteLogo from '/vite.svg'
 import './App.css'
+
 import { getAccessToken } from '../auth-server/handler';
 
 function App() {
-  //const [count, setCount] = useState(0)
   const [accessToken, setAccessToken] = useState("");
   const [events, setEvents] = useState([]); // To hold calendar events later
 
@@ -23,7 +21,7 @@ function App() {
   const getAccessToken = async (code) => {
     try {
       // --- IMPORTANT: Replace this placeholder with your get-access-token URL ---
-      const getAccessTokenEndpoint = 'https://z6j7n76eya.execute-api.eu-central-1.amazonaws.com/dev/api/token/%7Bcode%7D';
+      const getAccessTokenEndpoint = 'https://z6j7n76eya.execute-api.eu-central-1.amazonaws.com/dev/api/token';
       const response = await fetch(getAccessTokenEndpoint + '/' + code);
       const { access_token } = await response.json();
       setAccessToken(access_token);

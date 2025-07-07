@@ -6,24 +6,50 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-
     <title>Test Auth Server</title>
+
+
+ <!-- Step 1 : course walk through -->
 </head>
 
 
 <body>
-    <!-- Step 1-->
-    <style>
+    <!-- Step 1 : course walk through -->
+      <style>
+        body {
+            font-family: sans-serif;
+        }
+
         #container {
             max-width: 500px;
         }
+
         h4 {
             margin-top: 25px;
         }
-    </style>
+
+        /* Style for pre-formatted code block*/
+        #eventsResult {
+            background-color: f4f4f4;
+            border: 1px solid #ddd;
+            padding: 10px;
+            white-space: pre-wrap;
+            /* ALLOWS TEXT TO WRAP*/
+            word-wrap: break-word;
+            /*BREAKS LONG WORDS/TOKENS*/
+            font-family: monospace;
+        }
+
+        button {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+    </style> <!-- Step 1 : course walk through -->
+
+    <!-- Update cause of Step 7 in 4.3 Task -->
 
     <!-- Step 2 -->
-     <main id="container">
+    <main id="container">
         <h1>OAuth2 Test</h1>
         <h4><b>Step 1:</b> Get the Auth URL </h4>
         <p>Click the button below to get your auth url.</p>
@@ -36,36 +62,44 @@
         <p>
             After you're redirected back to your Meet App on GitHub, copy the code from the URI.
         </p>
-        <br/>
-        <label
-        >Code input 
-        <input id="code" type="text" value=""/>
+        <br />
+        <label>
+            Code input
+            <input id="code" type="text" value="" />
         </label>
         <button id="getToken">Get Token</button>
         <p id="accessToken"></p>
-     </main>
-     <!-- Step 3 : New line of Code for Scripts starts here -->
-      <script type="text/javascript">
+
+        <!-- NEW HTML FOR STEP 3 - ADDED HERE -->
+        <h4>Step 3: Get the calendar events</h4>
+        <p>Click the button below to get the events from your calendar.</p>
+        <button id="getEventsButton">Get Events</button>
+        <pre><code id="eventsResult"></code></pre>
+        <!-- END OF NEW HTML -->
+    </main>
+
+
+    <!-- Step 3 : New line of Code for Scripts starts here -->
+    <script type="text/javascript">
         // ---------------------------- STEP 1
         const getAuthUrlButton = document.getElementById("getAuthUrlButton");
         const resultElement = document.getElementById("result");
-        const resultLink = document.getElementById("authURL");
-        // Replace this with your own endpoint
-        const getAuthURL = "https://z6j7n76eya.execute-api.eu-central-1.amazonaws.com/dev/api/get-auth-url";
+        const resultLink = document.getElementById("authUrl");
+        const getAuthURL = "https://z6j7n76eya.execute-api.eu-central-1.amazonaws.com/dev/api/get-auth-url"; // Replace this with your own endpoint
 
-        getAuthUrlButton.onclick = function(){
+        getAuthUrlButton.onclick = function () {
             fetch(getAuthURL)
-            .then(function(response){
-                return response.json();
-            })
-            .then(function(json){
-                const result = JSON.stringify(json);
-                // We get the value of authUrl
-                const { authUrl } = JSON.parse(result);
-                // Then add it to the html
-                resultElement.innerText = result;
-                resultLink.href = authUrl; 
-            });
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (json) {
+                    const result = JSON.stringify(json);
+                    // We get the value of authUrl
+                    const { authUrl } = JSON.parse(result);
+                    // Then add it to the html
+                    resultElement.innerText = result;
+                    resultLink.href = authUrl;
+                });
         };
         // ----------------------------- END OF STEP 1 
         //  We are given authUrl from there able to copy & paste it into browser and see google login.
@@ -81,20 +115,48 @@
             let code = codeValue.value;
 
             // if the authorization code is not URL-encoded, then URL-encode it
-            if(decodeURIComponent(code) === code) {
+            if (decodeURIComponent(code) === code) {
                 code = encodeURIComponent(codeValue.value);
             }
             const getTokenRequest = getToken + "/" + code;
             fetch(getTokenRequest)
-            .then(function(response){
-                return response.json();
-            })
-            .then(function(json){
-                accessTokenElement.innerText = JSON.stringify(json);
-            });
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (json) {
+                    accessTokenElement.innerText = JSON.stringify(json);
+                });
         };
         // ----------------------------- END OF STEP 2
-      </script>
+
+
+        // ----------------------------- STEP 3: GET CALENDAR EVENTS
+        const getEventsButton = document.getElementById("getEventsButton");
+        const eventsResultElement = document.getElementById("eventsResult");
+
+        // Add your actual get-events endpoint url here
+        const getEventsURL = "https://z6j7n76eya.execute-api.eu-central-1.amazonaws.com/dev/api/get-events";
+
+
+        getEventsButton.onclick = function () {
+            // Get the access_token from the result of Step 2
+            const { access_token } = JSON.parse(accessTokenElement.innerText);
+
+            // Build the request URL by appending the token
+            const eventRequest = getEventsURL + "/" + access_token;
+
+            fetch(eventRequest)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (json) {
+                    // Display the formatted JSON result
+                    eventsResultElement.innerText = JSON.stringify(json, null, 2);
+                });
+
+        };
+        // --------------------------------- END OF STEP 3
+    </script>
 </body>
 
 </html>

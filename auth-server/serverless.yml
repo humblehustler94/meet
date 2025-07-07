@@ -1,33 +1,32 @@
 service: auth-server
 
-
 provider:
- name: aws
- runtime: nodejs18.x
- region: eu-central-1
- timeout: 30
- environment:
-   CLIENT_ID: ${file(config.json):CLIENT_ID}
-   CLIENT_SECRET: ${file(config.json):CLIENT_SECRET}
-   CALENDAR_ID: ${file(config.json):CALENDAR_ID}
-functions:
- getAuthURL:
-   handler: handler.getAuthURL
-   events:
-     - http:
-         path: api/get-auth-url
-         method: get
- getAccessToken:
-   handler: handler.getAccessToken
-   events:
-     - http:
-         path: api/token/{code}
-         method: get
+  name: aws
+  runtime: nodejs18.x
+  region: eu-central-1
+  timeout: 30
+  environment:
+    CLIENT_ID: ${file(config.json):CLIENT_ID}
+    CLIENT_SECRET: ${file(config.json):CLIENT_SECRET}
+    CALENDAR_ID: ${file(config.json):CALENDAR_ID}
 
- # Step 1: Add the new getCalendarEvents function below
- getCalendarEvents:
+functions:
+  getAuthURL:
+    handler: handler.getAuthURL
+    events:
+      - http:
+          path: api/get-auth-url
+          method: get
+  getAccessToken:
+    handler: handler.getAccessToken
+    events:
+      - http:
+          path: api/token/{code}
+          method: get
+  # --- New function added below STEP 1 - ADD getCalendarEvents() ---
+  getCalendarEvents:
     handler: handler.getCalendarEvents
     events:
       - http:
           path: api/get-events/{access_token}
-          method: get         
+          method: get
