@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import './App.css'
+import EventList from './components/EventList'; // <-- 1. Import the new component.
 
 // Note: The getAccessToken import might need adjustment based on your file structure.
 // If your auth-server folder is at the root, '../auth-server/handler' is correct from src/.
@@ -60,8 +61,9 @@ return (
       </div>
     )}
 
-    {/* ADD THIS LINE TO MAKE THE TEST PASS */}
-    <ul></ul> 
+    {/* ADD THIS LINE TO MAKE THE TEST PASS <ul></ul> */}
+    {/* REPLACE THE OLD <ul> WITH THE NEW <EventList /> COMPONENT */}
+    <EventList />
     
   </div>
 );
