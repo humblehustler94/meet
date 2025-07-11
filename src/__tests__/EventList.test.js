@@ -14,7 +14,7 @@ describe('<EventList /> component', () => {
     // Test Case 2: (This is the new test you are adding)
     test('renders correct number of events', () => {
         // 1. Define mock data: an array with 4 objects
-        const mockEvents = [{}, {}, {}, {}];
+        const mockEvents = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }]; // Mock data now has unique IDs.
 
         // 2. Render the component, passing the mock data as a prop
         render(<EventList events={mockEvents} />);

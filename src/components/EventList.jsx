@@ -14,7 +14,9 @@ const EventList = ({ events = [] }) => {
             The event's ID is the perfect unique key. Since our mock data doesn't 
             have IDs yet, we can use the index for now, but we'll change this later.
             */}
-            {events.map((event, index) => <Event key={index} event={event} />)}
+            {/* Refactor this code line below to use event.id. 
+            Key prop now uses the stable event.id instead of the potentially unstable index. */}
+            {events.map(event => <Event key={event.id} event={event} />)}
         </ul> // added id="event-list" to the <ul> tag.
     );
 }
