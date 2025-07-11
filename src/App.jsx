@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import './App.css'
+import CitySearch from './components/CitySearch'; // <---2. Import CitySearch
 import EventList from './components/EventList'; // <-- 1. Import the new component.
 
 // Note: The getAccessToken import might need adjustment based on your file structure.
@@ -16,7 +17,6 @@ function App() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
-
     if (code) {
       // If we find a code in the URL, exchange it for an access token
       getAccessToken(code);
@@ -45,28 +45,32 @@ function App() {
     }
   };
 
-return (
-  <div className="App">
-    <h1>Meet App</h1>
-    {accessToken ? (
-      <div>
-        <h2>You are signed in!</h2>
-      </div>
-    ) : (
-      <div>
-        <h2>Please sign in to see upcoming events.</h2>
-        <button className="google-btn" onClick={handleLoginClick}>
-          Sign in with Google
-        </button>
-      </div>
-    )}
+  return (
+    <div className="App">
+      <h1>Meet App</h1>
+      {/* 1. RENDER the CitySearch component here to make the test pass */}
+      <CitySearch />
 
-    {/* ADD THIS LINE TO MAKE THE TEST PASS <ul></ul> */}
-    {/* REPLACE THE OLD <ul> WITH THE NEW <EventList /> COMPONENT */}
-    <EventList />
-    
-  </div>
-);
+      {accessToken ? (
+        <div>
+          <h2>You are signed in!</h2>
+        </div>
+      ) : (
+        <div>
+          <h2>Please sign in to see upcoming events.</h2>
+          <button className="google-btn" onClick={handleLoginClick}>
+            Sign in with Google
+          </button>
+        </div>
+      )}
+
+      
+      {/* REPLACE THE OLD <ul> WITH THE NEW <EventList /> COMPONENT */}
+      {/* 2. PASS the 'events' state down to the EventList component */}
+      <EventList events={events} />
+
+    </div>
+  );
 }
 
 export default App;
