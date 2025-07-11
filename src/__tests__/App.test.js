@@ -6,21 +6,32 @@ import App from '../App';
 // Note: We don't need 'import React from "react";' because of our modern Babel setup!
 
 describe('<App /> component', () => {
+  // --- Adding new test block ---
+  test('renders the CitySearch component', () => {
+    render(<App />);
+    // We'll use a data-testid for this, which is a modern standard
+    // for identifying tes-specific elements
+    const citySearchElement = screen.getByTestId("city-search");
+    expect(citySearchElement).toBeInTheDocument();
+  });
+  // -----------------------------------------------------------
+
   // Test Case 1: The component renders without crashing
   test('renders the App component', () => {
     render(<App />);
     // This test implicitly passes if render() doesn't throw an error.
     // It's a good "smoke test" to have.
   });
+  // -------------------------------------------------------------
 
   // Test Case 2: The list of events is rendered
   test('renders list of events', () => {
     render(<App />);
-    
+
     // Find the element that has the role of a 'list'. This is more user-centric
     // than searching for an ID. We assume your event list is a <ul> or <ol>.
-    const eventList = screen.getByRole('list'); 
-    
+    const eventList = screen.getByRole('list');
+
     expect(eventList).toBeInTheDocument();
   });
 });
