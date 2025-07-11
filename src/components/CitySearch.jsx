@@ -1,10 +1,16 @@
 // src/components/CitySearch.jsx
 // This is the basic component structure
-// We add the data-testid attribute so our App.test.js can find it
+// We add the data-testid attribute so our App.test.js can find 
+
+// We are using data-testid to match our modern App.test.js
 const CitySearch = () => {
     return (
         <div data-testid="city-search">
-            {/* The input field and suggestions list will go here later */}
+            <input
+                type="text"
+                className="city"
+                placeholder="Search for a city"
+            />
         </div>
     )
 }
