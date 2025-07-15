@@ -17,9 +17,14 @@ describe('<CitySearch /> component', () => {
         const user = userEvent.setup();
         render(<CitySearch />);
 
+        // 2. Find the input element by its role
+        // We use getByRole because we EXPECT it to be there.
         // 2. Find the textbox
         const cityTextBox = screen.getByRole('textbox');
 
+        // 3. Assert that the textbox is in the document AND has the correct class
+        expect(cityTextBox).toBeInTheDocument();
+        expect(cityTextBox).toHaveClass('city');
         // 3. Simulate a click
         await user.click(cityTextBox);
 
