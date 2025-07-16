@@ -16,23 +16,26 @@ describe('<CitySearch /> component', () => {
     // --- Test 2 New failing test to add ---
     test('suggestions list is hidden by default', async () => {
         render(<CitySearch />);
+        // Use queryByRole because the element might not be there (which what we want)
         const suggestionList = screen.queryByRole('list');
         expect(suggestionList).not.toBeInTheDocument();
     });
 
-    test('renders a list of suggestions when city textbox is clicked', async () => {
-        // 1. set up user instance
+
+    // --- Test 3: (New test) check that suggestions appear on click/focus
+    test('renders a list of suggestions when city textbox gain focus', async () => {
+        // 1. Setup
         const user = userEvent.setup();
         render(<CitySearch />);
 
-        // 2. Find the textbox
+        // 2. Action
         const cityTextBox = screen.getByRole('textbox');
-
-        // 3. Simulate a click
         await user.click(cityTextBox);
 
-        // 4. Assert that the suggestion list is now visible 
+        // 3. Assertion
+        // Use getByRole because we now Except the list to be there 
         const suggestionList = screen.getByRole('list');
         expect(suggestionList).toBeInTheDocument();
+        expect(suggestionList).toHaveClass('suggestions');
     });
 });

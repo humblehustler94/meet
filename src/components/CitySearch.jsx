@@ -1,16 +1,23 @@
 // src/components/CitySearch.jsx
-// This is the basic component structure
-// We add the data-testid attribute so our App.test.js can find 
+import { useState } from 'react'; // 1. Import useState
 
-// We are using data-testid to match our modern App.test.js
 const CitySearch = () => {
+    // 2. Create the state variable. Default is false
+    const [showSuggestions, setShowSuggestions] = useState(false);
     return (
         <div data-testid="city-search">
             <input
                 type="text"
                 className="city"
                 placeholder="Search for a city"
+                // This is the new prop: when the input is focused (clicked),
+                // set showSuggestions to true
+                onFocus={() => setShowSuggestions(true)}
             />
+            {/* The suggestion list will go here soon */}
+            { showSuggestions ? (
+                <ul className='suggestions'></ul>
+            ) : null}
         </div>
     )
 }
