@@ -1,39 +1,41 @@
-// src/__test__/CitySearch.test.js
+// src/__test__/CitySearch.test.js (Refactor for cleanliness)
 
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'; // <--- 1. IMPORT new code line added
 import CitySearch from '../components/CitySearch';
 
 describe('<CitySearch /> component', () => {
-    // Test 1 : Already exsists and passes
-    test('renders text input', () => {
+    // --- Add this beforeEach Block ---
+    // It will render the citySearch component before each test
+    beforeEach(() => {
         render(<CitySearch />);
+    });
+
+    // -- Test 1 : Renders text input ---
+    test('renders text input', () => {
+        // render(<CitySearch />); call is now removed from here
         const cityTextBox = screen.getByRole('textbox');
         expect(cityTextBox).toBeInTheDocument();
         expect(cityTextBox).toHaveClass('city');
     });
 
-    // --- Test 2 New failing test to add ---
+    // --- Test 2 : Suggestions list is hidden by default ---
     test('suggestions list is hidden by default', async () => {
-        render(<CitySearch />);
+        // render(<CitySearch />);
         // Use queryByRole because the element might not be there (which what we want)
         const suggestionList = screen.queryByRole('list');
         expect(suggestionList).not.toBeInTheDocument();
     });
 
 
-    // --- Test 3: (New test) check that suggestions appear on click/focus
+    // --- Test 3: Renders a list of suggestions when city textbox gains focus ---
     test('renders a list of suggestions when city textbox gain focus', async () => {
-        // 1. Setup
         const user = userEvent.setup();
-        render(<CitySearch />);
-
-        // 2. Action
+       // render(<CitySearch />);
+        
         const cityTextBox = screen.getByRole('textbox');
         await user.click(cityTextBox);
 
-        // 3. Assertion
-        // Use getByRole because we now Except the list to be there 
         const suggestionList = screen.getByRole('list');
         expect(suggestionList).toBeInTheDocument();
         expect(suggestionList).toHaveClass('suggestions');

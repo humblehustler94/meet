@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "test": "NODE_NO_WARNINGS =1 jest",
+    "test": " cross-env NODE_NO_WARNINGS=1 jest",
     "test:watch": "jest --watch"
   },
   "dependencies": {
@@ -25,6 +25,7 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "babel-jest": "^30.0.4",
+    "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.2",
     "eslint-plugin-react-hooks": "^4.6.2",
