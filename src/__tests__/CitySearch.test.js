@@ -60,7 +60,7 @@ describe('<CitySearch /> component', () => {
 
         // get all <li> elements inside the suggestion list
         const suggestionListItems = screen.getAllByRole('listitem');
-        expect(suggestionListItems).toHaveLength(suggestions.length); // Note: I've removed the +1 for now
+        expect(suggestionListItems).toHaveLength(suggestions.length +1); // Note: I've removed the +1 for now
         for (let i = 0; i < suggestions.length; i += 1) {
             expect(suggestionListItems[i]).toHaveTextContent(suggestions[i]);
         }
