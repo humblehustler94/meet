@@ -7,11 +7,21 @@ import mockData from './mock-data';
 */
 
 export const extractLocations = (events) => {
+    // Use .map() to create a new array of just the location strings 
     const extractLocations = events.map((event) => event.location);
-    const locations = [ ...new Set(extractLocations)];
+
+    // Use a Set to get only the unique locations, then spread it back into an array
+    const locations = [...new Set(extractLocations)];
     return locations;
 };
 
+/*
+* This function is holding async keyword for future development
+ * when it will be fetching events from the real API
+*/
+
 export const getEvents = async () => {
+    // In a test environment, it returns mock data.
+    // In the future. it will fetch from the Google Calendar API
     return mockData;
 };
