@@ -1,87 +1,79 @@
-// src/__test__/CitySearch.test.js (Refactor for cleanliness)
+// src/__tests__/CitySearch.test.js (Correctly Structured)
 
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CitySearch from '../components/CitySearch';
-import { extractLocations, getEvents } from '../api'; // <-- IMPORT
+import { extractLocations, getEvents } from '../api';
 
 describe('<CitySearch /> component', () => {
-    // We need to pass allLocations to the component for this test suite
-    // We can get them once before all tests
-    let allLocations;
-    beforeAll(async () => {
-        const allEvents = await getEvents();
-        allLocations = extractLocations(allEvents);
-    });
-
-    // Render the component with the neccessary props before each test
-    beforeEach(() => {
-        render(<CitySearch allLocations={allLocations} />);
-    });
-
-    // -- Test 1 : Renders text input ---
-    test('renders text input', () => {
-        const cityTextBox = screen.getByRole('textbox');
-        expect(cityTextBox).toBeInTheDocument();
-        expect(cityTextBox).toHaveClass('city');
-    });
-
-    // --- Test 2 : Suggestions list is hidden by default ---
-    test('suggestions list is hidden by default', async () => {
-        const suggestionList = screen.queryByRole('list');
-        expect(suggestionList).not.toBeInTheDocument();
-    });
-
-
-    // --- Test 3: Renders a list of suggestions when city textbox gains focus ---
-    test('renders a list of suggestions when city textbox gains focus', async () => {
+    // --- Test for the edge case where the prop is missing ---
+    // This test lives at the top level of the describe block.
+    test('does not crash when allLocations prop is not provided', async () => {
         const user = userEvent.setup();
+        render(<CitySearch />); // This test has its own render call.
+
         const cityTextBox = screen.getByRole('textbox');
-        await user.click(cityTextBox);
-        const suggestionList = screen.getByRole('list');
-        expect(suggestionList).toBeInTheDocument();
-        expect(suggestionList).toHaveClass('suggestions');
+        await user.type(cityTextBox, "a");
+
+        const suggestionListItems = screen.getAllByRole('listitem');
+        expect(suggestionListItems).toHaveLength(1);
+        expect(suggestionListItems[0]).toHaveTextContent('See all cities');
     });
 
-    // --- NEW FAILING TEST  ---
-    // --- Test 4: Update list of suggestions correctly when user types
-    test('updates list of suggestions correctly when user types in the city textbox', async () => {
-        const user = userEvent.setup();
-        // render(<CitySearch allLocations={allLocations} />);
-
-        // user types "Berlin" in city textbox
-        const cityTextBox = screen.getByRole('textbox');
-        await user.type(cityTextBox, "Berlin");
-
-        // filter allLocations to locations matching "Berlin"
-        const suggestions = allLocations.filter((location) => {
-            return location.toUpperCase().indexOf(cityTextBox.value.toUpperCase()) > -1;
+    // --- This nested describe block groups all tests that need the prop ---
+    describe('when allLocations prop is provided', () => {
+        let allLocations;
+        beforeAll(async () => {
+            const allEvents = await getEvents();
+            allLocations = extractLocations(allEvents);
         });
 
-        // get all <li> elements inside the suggestion list
-        const suggestionListItems = screen.getAllByRole('listitem');
-        expect(suggestionListItems).toHaveLength(suggestions.length +1); // Note: I've removed the +1 for now
-        for (let i = 0; i < suggestions.length; i += 1) {
-            expect(suggestionListItems[i]).toHaveTextContent(suggestions[i]);
-        }
-    });
+        // This beforeEach only applies to tests inside THIS describe block.
+        beforeEach(() => {
+            render(<CitySearch allLocations={allLocations} />);
+        });
 
-    // --- Test 5: (New Failing test) ---
-    test('renders the suggestion text in the textbox upon clicking on a suggestion', async () => {
-        const user= userEvent.setup();
-        // The component is already rendered by beforeEach
+        test('renders text input', () => {
+            const cityTextBox = screen.getByRole('textbox');
+            expect(cityTextBox).toBeInTheDocument();
+            expect(cityTextBox).toHaveClass('city');
+        });
 
-        // 1. First, type "Berlin" to show suggestions
-        const cityTextBox = screen.getByRole('textbox');
-        await user.type(cityTextBox, "Berlin");
+        test('suggestions list is hidden by default', () => {
+            const suggestionList = screen.queryByRole('list');
+            expect(suggestionList).not.toBeInTheDocument();
+        });
 
-        // 2. Find the specific suggestion to click on
-        const BerlinGermanySuggestion = screen.getByText('Berlin, Germany');
+        test('renders a list of suggestions when city textbox gains focus', async () => {
+            const user = userEvent.setup();
+            const cityTextBox = screen.getByRole('textbox');
+            await user.click(cityTextBox);
+            const suggestionList = screen.getByRole('list');
+            expect(suggestionList).toBeInTheDocument();
+            expect(suggestionList).toHaveClass('suggestions');
+        });
 
-        // 3. Click it
-        await user.click(BerlinGermanySuggestion);
+        test('updates list of suggestions correctly when user types in the city textbox', async () => {
+            const user = userEvent.setup();
+            const cityTextBox = screen.getByRole('textbox');
+            await user.type(cityTextBox, "Berlin");
+            const suggestions = allLocations.filter((location) => {
+                return location.toUpperCase().indexOf(cityTextBox.value.toUpperCase()) > -1;
+            });
+            const suggestionListItems = screen.getAllByRole('listitem');
+            expect(suggestionListItems).toHaveLength(suggestions.length + 1);
+            for (let i = 0; i < suggestions.length; i += 1) {
+                expect(suggestionListItems[i]).toHaveTextContent(suggestions[i]);
+            }
+        });
 
-        // 4. Assert that the input's value is now the full suggestion text
-        expect(cityTextBox).toHaveValue('Berlin, Germany');
+        test('renders the suggestion text in the textbox upon clicking on a suggestion', async () => {
+            const user = userEvent.setup();
+            const cityTextBox = screen.getByRole('textbox');
+            await user.type(cityTextBox, "Berlin");
+            const BerlinGermanySuggestion = screen.getByText('Berlin, Germany');
+            await user.click(BerlinGermanySuggestion);
+            expect(cityTextBox).toHaveValue('Berlin, Germany');
+        });
     });
 });
