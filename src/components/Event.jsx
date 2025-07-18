@@ -1,16 +1,27 @@
 // src/components/Event.jsx
+import { useState } from 'react';
 
-// This component represents a single event in the list.
-// For now, it's just an empty list item.
-const Event =( { event }) => {
-    return (
-        <li>
-            <h2>{event.summary}</h2>
-            <p>{event.start.dateTime}</p>
-            <p>{event.location}</p>
-            <button>Show Details</button>
-        </li>
-    );
+const Event = ({ event }) => {
+  const [showDetails, setShowDetails] = useState(false);
+
+  return (
+    <li>
+      <h2>{event.summary}</h2>
+      <p>{event.start.dateTime}</p>
+      <p>{event.location}</p>
+      
+      <button onClick={() => setShowDetails(!showDetails)}>
+        {showDetails ? 'Hide Details' : 'Show Details'}
+      </button>
+
+      {showDetails && (
+        <div className="details">
+          <h3>About this event:</h3>
+          <p>{event.description}</p>
+        </div>
+      )}
+    </li>
+  );
 }
 
 export default Event;

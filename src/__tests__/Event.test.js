@@ -42,23 +42,19 @@ describe('<Event /> component', () => {
         const showDetailsButton = screen.getByRole('button', { name: /show details/i });
         await user.click(showDetailsButton);
 
-        const details = screen.getByText(testEvent.description);
+        const details = screen.getByText('About this event:');
         expect(details).toBeInTheDocument();
     });
 
     test('hides the details section when the user clicks on the "hide details" button', async () => {
         const user = userEvent.setup();
         render(<Event event={testEvent} />);
-
-        // First, click to show details
         const showDetailsButton = screen.getByRole('button', { name: /show details/i });
-        await user.click(showDetailsButton);
-
-        // Then, click to hide details
+        await user.click(showDetailsButton); // Open it first
         const hideDetailsButton = screen.getByRole('button', { name: /hide details/i });
-        await user.click(hideDetailsButton);
-
-        const details = screen.queryByText(testEvent.description);
+        await user.click(hideDetailsButton); // Then close it
+        // Look for the heading, which should now be gone
+        const details = screen.queryByText('About this event:');
         expect(details).not.toBeInTheDocument();
 
     });
