@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import './App.css'
+import NumberOfEvents from './components/NumberOfEvents'; // <-- 3. Import new component NumberOfEvents
 import CitySearch from './components/CitySearch'; // <---2. Import CitySearch
 import EventList from './components/EventList'; // <-- 1. Import the new component.
+
 
 // Note: The getAccessToken import might need adjustment based on your file structure.
 // If your auth-server folder is at the root, '../auth-server/handler' is correct from src/.
@@ -50,6 +52,7 @@ function App() {
       <h1>Meet App</h1>
       {/* 1. RENDER the CitySearch component here to make the test pass */}
       <CitySearch />
+      <NumberOfEvents /> {/* Added this line to return */}
 
       {accessToken ? (
         <div>
