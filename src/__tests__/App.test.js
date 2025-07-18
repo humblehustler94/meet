@@ -26,5 +26,11 @@ describe('<App /> component', () => {
     expect(eventList).toBeInTheDocument();
   });
 
+  test('renders the NumberOfEvents component', () => {
+    // beforeEach already renders App
+    const numberOfEventsElement = screen.getByTestId('number-of-events');
+    expect(numberOfEventsElement).toBeInTheDocument();
+  });
+
   // The simple 'renders the App component' test has been removed as it's now redundant.
 });
