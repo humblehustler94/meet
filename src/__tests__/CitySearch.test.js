@@ -65,4 +65,23 @@ describe('<CitySearch /> component', () => {
             expect(suggestionListItems[i]).toHaveTextContent(suggestions[i]);
         }
     });
+
+    // --- Test 5: (New Failing test) ---
+    test('renders the suggestion text in the textbox upon clicking on a suggestion', async () => {
+        const user= userEvent.setup();
+        // The component is already rendered by beforeEach
+
+        // 1. First, type "Berlin" to show suggestions
+        const cityTextBox = screen.getByRole('textbox');
+        await user.type(cityTextBox, "Berlin");
+
+        // 2. Find the specific suggestion to click on
+        const BerlinGermanySuggestion = screen.getByText('Berlin, Germany');
+
+        // 3. Click it
+        await user.click(BerlinGermanySuggestion);
+
+        // 4. Assert that the input's value is now the full suggestion text
+        expect(cityTextBox).toHaveValue('Berlin, Germany');
+    });
 });
