@@ -1,7 +1,15 @@
+// src/App.jsx (Updated to pass the test)
+
 import { useState, useEffect } from 'react'
 import './App.css'
+import NumberOfEvents from './components/NumberOfEvents'; // <-- 3. Import new component NumberOfEvents
+import CitySearch from './components/CitySearch'; // <---2. Import CitySearch
+import EventList from './components/EventList'; // <-- 1. Import the new component.
 
-import { getAccessToken } from '../auth-server/handler';
+
+// Note: The getAccessToken import might need adjustment based on your file structure.
+// If your auth-server folder is at the root, '../auth-server/handler' is correct from src/.
+// import { getAccessToken } from '../auth-server/handler'; 
 
 function App() {
   const [accessToken, setAccessToken] = useState("");
@@ -11,7 +19,6 @@ function App() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
-
     if (code) {
       // If we find a code in the URL, exchange it for an access token
       getAccessToken(code);
@@ -20,7 +27,6 @@ function App() {
 
   const getAccessToken = async (code) => {
     try {
-      // --- IMPORTANT: Replace this placeholder with your get-access-token URL ---
       const getAccessTokenEndpoint = 'https://z6j7n76eya.execute-api.eu-central-1.amazonaws.com/dev/api/token';
       const response = await fetch(getAccessTokenEndpoint + '/' + code);
       const { access_token } = await response.json();
@@ -44,10 +50,13 @@ function App() {
   return (
     <div className="App">
       <h1>Meet App</h1>
+      {/* 1. RENDER the CitySearch component here to make the test pass */}
+      <CitySearch />
+      <NumberOfEvents /> {/* Added this line to return */}
+
       {accessToken ? (
         <div>
           <h2>You are signed in!</h2>
-          {/* You will add your event list and other components here later */}
         </div>
       ) : (
         <div>
@@ -57,6 +66,12 @@ function App() {
           </button>
         </div>
       )}
+
+      
+      {/* REPLACE THE OLD <ul> WITH THE NEW <EventList /> COMPONENT */}
+      {/* 2. PASS the 'events' state down to the EventList component */}
+      <EventList events={events} />
+
     </div>
   );
 }
