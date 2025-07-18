@@ -1,6 +1,7 @@
 // src/__tests__/EventList.test.js
 
 import { render, screen } from '@testing-library/react';
+import { getEvents} from '../api'; // <-- 1. import getEvents into EventList.test.js file
 import EventList from '../components/EventList';
 
 describe('<EventList /> component', () => {
@@ -12,18 +13,17 @@ describe('<EventList /> component', () => {
     });
 
     // Test Case 2: (This is the new test you are adding)
-    test('renders correct number of events', () => {
-        // 1. Define mock data: an array with 4 objects
-        const mockEvents = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }]; // Mock data now has unique IDs.
+    test('renders correct number of events', async () => { //< -- 2. Make it async
+        // 3. Fetch the mock data
+        const allEvents = await getEvents();
 
-        // 2. Render the component, passing the mock data as a prop
-        render(<EventList events={mockEvents} />);
+        // 4. Render the component with the real mock data
+        render(<EventList events={allEvents} />);
 
-        // 3. Find all elements with the role "listitem" (which are <li> tags)
         const listItems = screen.getAllByRole("listitem");
 
-        // 4. Assert that the number of found items matches the mock data length
-        expect(listItems).toHaveLength(4);
+        // 5. Assert against the length of the fetched data
+        expect(listItems).toHaveLength(allEvents.length);
     });
 });
 
