@@ -2,25 +2,36 @@
 
 import { useState, useEffect } from 'react'
 import './App.css'
-import NumberOfEvents from './components/NumberOfEvents'; // <-- 3. Import new component NumberOfEvents
-import CitySearch from './components/CitySearch'; // <---2. Import CitySearch
-import EventList from './components/EventList'; // <-- 1. Import the new component.
+import NumberOfEvents from './components/NumberOfEvents';
+import CitySearch from './components/CitySearch'; 
+import EventList from './components/EventList'; 
+import { getEvents} from './api'; 
 
-
+/*
 // Note: The getAccessToken import might need adjustment based on your file structure.
 // If your auth-server folder is at the root, '../auth-server/handler' is correct from src/.
 // import { getAccessToken } from '../auth-server/handler'; 
+*/
 
 function App() {
   const [accessToken, setAccessToken] = useState("");
-  const [events, setEvents] = useState([]); // To hold calendar events later
+  const [events, setEvents] = useState([]); // Will hold the full list of events from the API
+  const [ numberOfEvents, setNumberOfEvents] = useState(32); // The number of events to display
 
-  // This useEffect will run once when the component loads
+  // Effect for fetching event data on initial component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      const allEvents = await getEvents();
+      setEvents(allEvents);
+    };
+    fetchData();
+  },[]); // Empty dependency array ensures this runs only once 
+
+  // Effect for handling the GOOGLE OAUTH redirect
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
     if (code) {
-      // If we find a code in the URL, exchange it for an access token
       getAccessToken(code);
     }
   }, []);
@@ -48,11 +59,11 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="App" role="main">
       <h1>Meet App</h1>
       {/* 1. RENDER the CitySearch component here to make the test pass */}
       <CitySearch />
-      <NumberOfEvents /> {/* Added this line to return */}
+      <NumberOfEvents setNumberOfEvents={setNumberOfEvents} /> {/* Added this line to return */}
 
       {accessToken ? (
         <div>
@@ -70,7 +81,7 @@ function App() {
       
       {/* REPLACE THE OLD <ul> WITH THE NEW <EventList /> COMPONENT */}
       {/* 2. PASS the 'events' state down to the EventList component */}
-      <EventList events={events} />
+      <EventList events={events.slice(0, numberOfEvents)} />
 
     </div>
   );
