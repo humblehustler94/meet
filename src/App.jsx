@@ -5,7 +5,7 @@ import './App.css'
 import NumberOfEvents from './components/NumberOfEvents';
 import CitySearch from './components/CitySearch'; 
 import EventList from './components/EventList'; 
-import { getEvents} from './api'; 
+import { getEvents, extractLocations} from './api'; // <-- 1. Import extractionLocations 
 
 /*
 // Note: The getAccessToken import might need adjustment based on your file structure.
@@ -17,11 +17,15 @@ function App() {
   const [accessToken, setAccessToken] = useState("");
   const [events, setEvents] = useState([]); // Will hold the full list of events from the API
   const [ numberOfEvents, setNumberOfEvents] = useState(32); // The number of events to display
+  // 2. Add a new state to hold all possible locations
+  const [allLocations, setAllLocations] = useState([]);
 
   // Effect for fetching event data on initial component mount
   useEffect(() => {
     const fetchData = async () => {
       const allEvents = await getEvents();
+      // 3. Set both the events state and the allLocations state
+      setAllLocations(extractLocations(allEvents));
       setEvents(allEvents);
     };
     fetchData();
@@ -62,7 +66,7 @@ function App() {
     <div className="App" role="main">
       <h1>Meet App</h1>
       {/* 1. RENDER the CitySearch component here to make the test pass */}
-      <CitySearch />
+      <CitySearch allLocations={allLocations} />
       <NumberOfEvents setNumberOfEvents={setNumberOfEvents} /> {/* Added this line to return */}
 
       {accessToken ? (
