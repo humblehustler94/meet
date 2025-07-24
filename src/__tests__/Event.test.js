@@ -15,8 +15,12 @@ describe('<Event /> component', () => {
 
     test('renders event start time', () => {
         render(<Event event={testEvent} />);
+
+        const formattedDate = new Date(testEvent.start.dateTime).toUTCString();
+
+        const dateElement = screen.getByText(formattedDate);
         // Note: Using start.dateTime is more user-centeric than 'created'
-        expect(screen.getByText(testEvent.start.dateTime)).toBeInTheDocument();
+        expect(dateElement).toBeInTheDocument();
     });
 
     test('renders event location', () => {
