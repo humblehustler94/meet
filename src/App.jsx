@@ -1,28 +1,20 @@
-// src/App.jsx (Updated to pass the test)
+// src/App.jsx
 
-import { useState, useEffect } from 'react'
-import './App.css'
+import { useState, useEffect } from 'react';
+import './App.css';
 import NumberOfEvents from './components/NumberOfEvents';
 import CitySearch from './components/CitySearch';
 import EventList from './components/EventList';
-import { getEvents, extractLocations } from './api'; // <-- 1. Import extractionLocations 
-
-/*
-// Note: The getAccessToken import might need adjustment based on your file structure.
-// If your auth-server folder is at the root, '../auth-server/handler' is correct from src/.
-// import { getAccessToken } from '../auth-server/handler'; 
-*/
+import { getEvents, extractLocations } from './api';
 
 function App() {
-  const [accessToken, setAccessToken] = useState("");
-  const [events, setEvents] = useState([]); // Will hold the full list of events from the API
-  const [numberOfEvents, setNumberOfEvents] = useState(32); // The number of events to display
-  // 2. Add a new state to hold all possible locations
+  // All authentication-related state and functions have been removed.
+  const [events, setEvents] = useState([]);
+  const [numberOfEvents, setNumberOfEvents] = useState(32);
   const [allLocations, setAllLocations] = useState([]);
-  // --- Add this new state ---
   const [currentCity, setCurrentCity] = useState("See all cities");
 
-  // Effect for fetching event data on initial component mount
+  // This useEffect now only focuses on fetching data.
   useEffect(() => {
     const fetchData = async () => {
       const allEvents = await getEvents();
@@ -30,72 +22,26 @@ function App() {
       setEvents(allEvents);
     };
     fetchData();
-  }, []); // Empty dependency array ensures this runs only once 
-
-  // Effect for handling the GOOGLE OAUTH redirect
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
-    if (code) {
-      getAccessToken(code);
-    }
   }, []);
 
-  const getAccessToken = async (code) => {
-    try {
-      const getAccessTokenEndpoint = 'https://z6j7n76eya.execute-api.eu-central-1.amazonaws.com/dev/api/token';
-      const response = await fetch(getAccessTokenEndpoint + '/' + code);
-      const { access_token } = await response.json();
-      setAccessToken(access_token);
-    } catch (error) {
-      console.error("Error getting access token", error);
-    }
-  };
-
-  const handleLoginClick = async () => {
-    try {
-      const getAuthURLEndpoint = 'https://z6j7n76eya.execute-api.eu-central-1.amazonaws.com/dev/api/get-auth-url';
-      const response = await fetch(getAuthURLEndpoint);
-      const { authUrl } = await response.json();
-      window.location.href = authUrl; // Redirect to Google Login
-    } catch (error) {
-      console.error("Error fetch auth URL", error);
-    }
-  };
-
-  // --- Add this filtering logic ---
-  // This derived state will hold the correctly filtered list of events.
+  // Filtering logic remains the same.
   const filteredEvents = currentCity === "See all cities"
-    ? events // If "See all cities" is selected, show all events.
-    : events.filter(event => event.location === currentCity); // Otherwise, filter by the selected city.
+    ? events
+    : events.filter(event => event.location === currentCity);
 
   return (
     <div className="App" role="main">
       <h1>Meet App</h1>
 
-      {/* --- Change #1: Pass the setCurrentCity function as a prop --- */}
-      <CitySearch 
-      allLocations={allLocations}
-      setCurrentCity={setCurrentCity} />
+      <CitySearch
+        allLocations={allLocations}
+        setCurrentCity={setCurrentCity}
+      />
+      <NumberOfEvents setNumberOfEvents={setNumberOfEvents} />
 
-      <NumberOfEvents setNumberOfEvents={setNumberOfEvents} /> {/* Added this line to return */}
+      {/* The conditional auth JSX has been removed. */}
 
-      {accessToken ? (
-        <div>
-          <h2>You are signed in!</h2>
-        </div>
-      ) : (
-        <div>
-          <h2>Please sign in to see upcoming events.</h2>
-          <button className="google-btn" onClick={handleLoginClick}>
-            Sign in with Google
-          </button>
-        </div>
-      )}
-
-      {/* --- Change #2: Pass the filtered and sliced list to EventList --- */}
       <EventList events={filteredEvents.slice(0, numberOfEvents)} />
-
     </div>
   );
 }
