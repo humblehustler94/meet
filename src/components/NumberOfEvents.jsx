@@ -1,24 +1,33 @@
-// scr/components/NumberOfEvents create new file within components folder
-// Earlier in the task I added 36 mock data 
 // src/components/NumberOfEvents.jsx
-import { useState } from "react";
 
-const NumberOfEvents = () => {
-  const [value, setValue] = useState('32');
-
+// We no longer need useState in this component
+const NumberOfEvents = ({ setNumberOfEvents, setErrorAlert }) => {
+  
+  // This handler function will now update the state in the parent App component
   const handleChange = (event) => {
-    setValue(event.target.value);
-  }
+    const value = event.target.value;
+    
+    // Optional but recommended: add some basic validation
+    if (isNaN(value) || value <= 0) {
+      // You can also pass an setErrorAlert prop to show a message to the user
+      if (setErrorAlert) setErrorAlert("Number must be greater than 0");
+    } else {
+      if (setErrorAlert) setErrorAlert("");
+      setNumberOfEvents(value);
+    }
+  };
 
   return (
     <div data-testid="number-of-events">
+      <label>Number of Events: </label>
       <input
         type="text"
-        value={value}
+        defaultValue="32"
         onChange={handleChange}
+        data-testid="number-of-events-input" // The required attribute for the test
       />
     </div>
   );
-}
+};
 
 export default NumberOfEvents;
