@@ -1,77 +1,47 @@
-// src/App.jsx (Updated to pass the test)
+// src/App.jsx
 
-import { useState, useEffect } from 'react'
-import './App.css'
-import NumberOfEvents from './components/NumberOfEvents'; // <-- 3. Import new component NumberOfEvents
-import CitySearch from './components/CitySearch'; // <---2. Import CitySearch
-import EventList from './components/EventList'; // <-- 1. Import the new component.
-
-
-// Note: The getAccessToken import might need adjustment based on your file structure.
-// If your auth-server folder is at the root, '../auth-server/handler' is correct from src/.
-// import { getAccessToken } from '../auth-server/handler'; 
+import { useState, useEffect } from 'react';
+import './App.css';
+import NumberOfEvents from './components/NumberOfEvents';
+import CitySearch from './components/CitySearch';
+import EventList from './components/EventList';
+import { getEvents, extractLocations } from './api';
 
 function App() {
-  const [accessToken, setAccessToken] = useState("");
-  const [events, setEvents] = useState([]); // To hold calendar events later
+  // All authentication-related state and functions have been removed.
+  const [events, setEvents] = useState([]);
+  const [numberOfEvents, setNumberOfEvents] = useState(32);
+  const [allLocations, setAllLocations] = useState([]);
+  const [currentCity, setCurrentCity] = useState("See all cities");
 
-  // This useEffect will run once when the component loads
+  // This useEffect now only focuses on fetching data.
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
-    if (code) {
-      // If we find a code in the URL, exchange it for an access token
-      getAccessToken(code);
-    }
+    const fetchData = async () => {
+      const allEvents = await getEvents();
+      setAllLocations(extractLocations(allEvents));
+      setEvents(allEvents);
+    };
+    fetchData();
   }, []);
 
-  const getAccessToken = async (code) => {
-    try {
-      const getAccessTokenEndpoint = 'https://z6j7n76eya.execute-api.eu-central-1.amazonaws.com/dev/api/token';
-      const response = await fetch(getAccessTokenEndpoint + '/' + code);
-      const { access_token } = await response.json();
-      setAccessToken(access_token);
-    } catch (error) {
-      console.error("Error getting access token", error);
-    }
-  };
-
-  const handleLoginClick = async () => {
-    try {
-      const getAuthURLEndpoint = 'https://z6j7n76eya.execute-api.eu-central-1.amazonaws.com/dev/api/get-auth-url';
-      const response = await fetch(getAuthURLEndpoint);
-      const { authUrl } = await response.json();
-      window.location.href = authUrl; // Redirect to Google Login
-    } catch (error) {
-      console.error("Error fetch auth URL", error);
-    }
-  };
+  // Filtering logic remains the same.
+  const filteredEvents = currentCity === "See all cities"
+    ? events
+    : events.filter(event => event.location === currentCity);
 
   return (
-    <div className="App">
+    <div className="App" role="main">
       <h1>Meet App</h1>
-      {/* 1. RENDER the CitySearch component here to make the test pass */}
-      <CitySearch />
-      <NumberOfEvents /> {/* Added this line to return */}
 
-      {accessToken ? (
-        <div>
-          <h2>You are signed in!</h2>
-        </div>
-      ) : (
-        <div>
-          <h2>Please sign in to see upcoming events.</h2>
-          <button className="google-btn" onClick={handleLoginClick}>
-            Sign in with Google
-          </button>
-        </div>
-      )}
+      <CitySearch
+        allLocations={allLocations}
+        setCurrentCity={setCurrentCity}
+      />
+      <NumberOfEvents setNumberOfEvents={setNumberOfEvents} />
 
-      
-      {/* REPLACE THE OLD <ul> WITH THE NEW <EventList /> COMPONENT */}
-      {/* 2. PASS the 'events' state down to the EventList component */}
-      <EventList events={events} />
+      {/* The conditional auth JSX has been removed. */}
 
+      <EventList events={filteredEvents.slice(0, numberOfEvents)} />
     </div>
   );
 }

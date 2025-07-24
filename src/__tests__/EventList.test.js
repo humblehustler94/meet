@@ -1,29 +1,43 @@
 // src/__tests__/EventList.test.js
 
-import { render, screen } from '@testing-library/react';
-import { getEvents} from '../api'; // <-- 1. import getEvents into EventList.test.js file
+// NEW/UPDATED IMPORTS: within and waitFor are added for the integration test.
+// App is also imported to be rendered in the new test.
+import { render, screen, within, waitFor } from '@testing-library/react';
+import { getEvents} from '../api';
 import EventList from '../components/EventList';
+import App from '../App'; // <-- Import the App component
 
+// --- UNIT TESTS FOR EVENTLISTS ---
 describe('<EventList /> component', () => {
-    // Test Case 1: (Already exists and passes)
-    test('has an element with "list" role', () => {
+    test('has an element with "list" role', () => { // --- Test Case 1 ---
         render(<EventList />); // 1. Render the component
-        const listElement = screen.getByRole("list"); // 2. Select the element by its role
-        expect(listElement).toBeInTheDocument();  // 3. Assert that element in the document
+        const listElement = screen.getByRole("list"); 
+        expect(listElement).toBeInTheDocument();  
     });
 
-    // Test Case 2: (This is the new test you are adding)
-    test('renders correct number of events', async () => { //< -- 2. Make it async
-        // 3. Fetch the mock data
+    test('renders correct number of events', async () => { // --- Test Case 2 ---
         const allEvents = await getEvents();
-
-        // 4. Render the component with the real mock data
         render(<EventList events={allEvents} />);
-
         const listItems = screen.getAllByRole("listitem");
-
-        // 5. Assert against the length of the fetched data
         expect(listItems).toHaveLength(allEvents.length);
+    });
+});
+
+// --- NEW INTEGRATION TEST SCOPE ---
+describe('<EventList /> integration', () => {
+    // new test from 4.5, refactored with modern best practices.
+    test('renders a list of events when the app is mounted and rendered', async () => {
+        // 1. Render the App component
+        render(<App />);
+
+        // 2. We need to wait for the events to be fetched and rendered asynchronously.
+        // `findAllByRole` is the perfect tool for this. It waits up to 1000ms.
+        // for elements with the role "listitem" to appear on screen.
+        const eventListItems = await screen.findAllByRole('listitem');
+
+        // 3. The mock API returns 32 events by default. We assert that the 
+        // number of rendered list items matches this.
+        expect(eventListItems.length).toBe(32);
     });
 });
 

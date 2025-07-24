@@ -1,28 +1,32 @@
-// src/components/CitySearch.jsx
-import { useState } from 'react';
+import { useState } from 'react'; // We no longer need useEffect
 
-// 1. Accept `allLocations` as a prop
-const CitySearch = ({ allLocations }) => {
-    // 2. Create the new state variable for query and suggestions
+const CitySearch = ({ allLocations, setCurrentCity }) => {
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [query, setQuery] = useState("");
-    const [suggestions, setSuggestions] = useState([]);
+    // The 'suggestions' state and the 'useEffect' hook have been removed.
 
-    // 4. Create the handler function
+    // Calculate suggestions directly from props and state on every render.
+    // This is the key change that fixes the bug.
+    const suggestions = allLocations
+        ? allLocations.filter(location =>
+            location.toUpperCase().indexOf(query.toUpperCase()) > -1
+          )
+        : [];
+
     const handleInputChanged = (event) => {
         const value = event.target.value;
-        const filteredLocations = allLocations ? allLocations.filter((location) => {
-            return location.toUpperCase().indexOf(value.toUpperCase()) > -1;
-        }) : [];
-
         setQuery(value);
-        setSuggestions(filteredLocations);
+        // Ensure suggestions are shown when the user is typing.
+        setShowSuggestions(true);
     };
 
-    // --- 1. CREATE the new handler function ---
     const handleItemClicked = (suggestion) => {
         setQuery(suggestion);
         setShowSuggestions(false); // Hide the list after selection
+        // Make sure setCurrentCity is being called
+        if(setCurrentCity) {
+            setCurrentCity(suggestion);
+        }
     };
 
     return (
@@ -35,25 +39,21 @@ const CitySearch = ({ allLocations }) => {
                 onFocus={() => setShowSuggestions(true)}
                 onChange={handleInputChanged}
             />
-
             {showSuggestions ? (
-                <ul className="suggestions">
-                    {/* --- 2. ADD onClick to the mapped items --- */}
-                    {suggestions.map((suggestion) => {
-                        return (
-                            <li onClick={() => handleItemClicked(suggestion)} key={suggestion}>
-                                {suggestion}
-                            </li>
-                        );
-                    })}
-                    {/* --- 3. ADD onClick to the static item --- */}
+                <ul className="suggestions" data-testid="suggestion-list">
+                    {/* This mapping now uses the calculated 'suggestions' constant */}
+                    {suggestions.map((suggestion) => (
+                        <li onClick={() => handleItemClicked(suggestion)} key={suggestion}>
+                            {suggestion}
+                        </li>
+                    ))}
                     <li key='See all cities' onClick={() => handleItemClicked("See all cities")}>
                         <b>See all cities</b>
                     </li>
                 </ul>
             ) : null}
         </div>
-    )
+    );
 }
 
 export default CitySearch;
