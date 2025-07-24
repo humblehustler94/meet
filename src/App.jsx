@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import NumberOfEvents from './components/NumberOfEvents';
-import CitySearch from './components/CitySearch'; 
-import EventList from './components/EventList'; 
-import { getEvents, extractLocations} from './api'; // <-- 1. Import extractionLocations 
+import CitySearch from './components/CitySearch';
+import EventList from './components/EventList';
+import { getEvents, extractLocations } from './api'; // <-- 1. Import extractionLocations 
 
 /*
 // Note: The getAccessToken import might need adjustment based on your file structure.
@@ -16,20 +16,21 @@ import { getEvents, extractLocations} from './api'; // <-- 1. Import extractionL
 function App() {
   const [accessToken, setAccessToken] = useState("");
   const [events, setEvents] = useState([]); // Will hold the full list of events from the API
-  const [ numberOfEvents, setNumberOfEvents] = useState(32); // The number of events to display
+  const [numberOfEvents, setNumberOfEvents] = useState(32); // The number of events to display
   // 2. Add a new state to hold all possible locations
   const [allLocations, setAllLocations] = useState([]);
+  // --- Add this new state ---
+  const [currentCity, setCurrentCity] = useState("See all cities");
 
   // Effect for fetching event data on initial component mount
   useEffect(() => {
     const fetchData = async () => {
       const allEvents = await getEvents();
-      // 3. Set both the events state and the allLocations state
       setAllLocations(extractLocations(allEvents));
       setEvents(allEvents);
     };
     fetchData();
-  },[]); // Empty dependency array ensures this runs only once 
+  }, []); // Empty dependency array ensures this runs only once 
 
   // Effect for handling the GOOGLE OAUTH redirect
   useEffect(() => {
@@ -62,11 +63,21 @@ function App() {
     }
   };
 
+  // --- Add this filtering logic ---
+  // This derived state will hold the correctly filtered list of events.
+  const filteredEvents = currentCity === "See all cities"
+    ? events // If "See all cities" is selected, show all events.
+    : events.filter(event => event.location === currentCity); // Otherwise, filter by the selected city.
+
   return (
     <div className="App" role="main">
       <h1>Meet App</h1>
-      {/* 1. RENDER the CitySearch component here to make the test pass */}
-      <CitySearch allLocations={allLocations} />
+
+      {/* --- Change #1: Pass the setCurrentCity function as a prop --- */}
+      <CitySearch 
+      allLocations={allLocations}
+      setCurrentCity={setCurrentCity} />
+
       <NumberOfEvents setNumberOfEvents={setNumberOfEvents} /> {/* Added this line to return */}
 
       {accessToken ? (
@@ -82,10 +93,8 @@ function App() {
         </div>
       )}
 
-      
-      {/* REPLACE THE OLD <ul> WITH THE NEW <EventList /> COMPONENT */}
-      {/* 2. PASS the 'events' state down to the EventList component */}
-      <EventList events={events.slice(0, numberOfEvents)} />
+      {/* --- Change #2: Pass the filtered and sliced list to EventList --- */}
+      <EventList events={filteredEvents.slice(0, numberOfEvents)} />
 
     </div>
   );
