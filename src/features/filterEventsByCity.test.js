@@ -2,6 +2,7 @@
 import React from 'react';
 import { loadFeature, defineFeature } from 'jest-cucumber';
 import { render, within, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import App from '../App';
 // Note: Event though getEvents isn't used directly here,
 // it's the source of the mock data for the App component.
@@ -11,7 +12,6 @@ const feature = loadFeature('./src/features/filterEventsByCity.feature');
 defineFeature(feature, test => {
     //  NEW VARIABLE 
     let AppComponent; // Declared here to be accessible in both when() and then()
-
 
     // Scenario 1
     test('When user hasn\'t searched for a city, show upcoming events from all cities.', ({ given, when, then }) => {
@@ -41,22 +41,33 @@ defineFeature(feature, test => {
         });
     });
 
-    // Scenario 2 (THIS REMAIN UNIMPLEMENTED FOR NOW)
+    // Scenario 2 - NEW IMPLEMENTATION 
     test('User should see a list of suggestions when they search for a city.', ({ given, when, then }) => {
+        // NEW VARIABLES SCOPED TO THIS SCENARIO TO KEEP TESTS ISOLATED
+        let AppComponent;
+        let CitySearchDOM;
+
         given('the main page is open', () => {
+            AppComponent = render(<App />);
 
         });
 
-        when('user starts typing in the city textbox', () => {
+        when('user starts typing in the city textbox', async () => {
+            const user = userEvent.setup();
+            CitySearchDOM = AppComponent.getByTestId('city-search');
+            const citySearchInput = within(CitySearchDOM).queryByRole('textbox');
+            await user.type(citySearchInput, "Berlin");
 
         });
 
         then('the user should receive a list of cities (suggestions) that match what they\'ve typed', () => {
+            const suggestionListItems = within(CitySearchDOM).queryAllByRole('listitem');
+            expect(suggestionListItems).toHaveLength(2);
 
         });
     });
 
-    // Scenario 3 (THIS REMAINS UNIMPLEMENTED FOR NOW)
+    // Scenario 3 
     test('User can select a city from the suggested list.', ({ given, and, when, then }) => {
         given('user was typing "Berlin" in the city textbox', () => {
 
