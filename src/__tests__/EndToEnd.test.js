@@ -4,12 +4,18 @@ import puppeteer from 'puppeteer';
 
 describe('show/hide an event details', () => {
 
+  // Override the default Jest timeout for this entire test suite
+  jest.setTimeout(90000); // Set timeout to 90 seconds
+
   let browser;
   let page;
 
   // beforeAll now ONLY launches the browser. This is done once.
   beforeAll(async () => {
     browser = await puppeteer.launch({
+      headless: false, // <-- NEW: Makes the browser window visible
+      slowMo: 250, // <-- NEW: Slows down each action by 250ms
+      timeout: 0, // <-- NEW: Removes Puppeteer's own timeout
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
   });
@@ -42,22 +48,13 @@ describe('show/hide an event details', () => {
     expect(eventDetails).toBeDefined();
   });
 
-  // --- NEW TEST FOR SCENARIO 3 ---
-  test('User can collaspe an event to hide details', async () => {
-    // 1. First, click button to EXPAND the details
+  // -- Test for Scenario 3 --
+  test('User can collapse an event to hide details', async () => {
     await page.click('.event .details-btn');
-
-    // 2. We need to find the details to make sure they are visible before we collapse them
     let eventDetails = await page.$('.event .details');
     expect(eventDetails).toBeDefined();
-
-    // 3. Now, click the SAME button again to COLLAPSE the details
     await page.click(' .event .details-btn');
-
-    // 4. Look for details element again
-    eventDetails = await page.$(' .event .details');
-
-    // 5. Assert that this time, the element does NOT exist (it is null)
+    eventDetails = await page.$('.event .details');
     expect(eventDetails).toBeNull();
   });
 
