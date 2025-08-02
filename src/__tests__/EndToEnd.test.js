@@ -13,8 +13,8 @@ describe('show/hide an event details', () => {
   // beforeAll now ONLY launches the browser. This is done once.
   beforeAll(async () => {
     browser = await puppeteer.launch({
-      headless: false, // <-- NEW: Makes the browser window visible
-      slowMo: 250, // <-- NEW: Slows down each action by 250ms
+     // headless: false, // <-- NEW: Makes the browser window visible
+     // slowMo: 250, // <-- NEW: Slows down each action by 250ms
       timeout: 0, // <-- NEW: Removes Puppeteer's own timeout
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
