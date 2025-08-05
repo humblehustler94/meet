@@ -131,6 +131,12 @@ module.exports.getCalendarEvents = async (event) => {
       // Handle error if promise is rejected
       return {
         statusCode: 500,
+        // --- Fix: ADDED CORS HEADERS TO THE ERROR RESPONSE ---
+        headers: {
+          'Access-Control-Allow-Origins': '*',
+          'Access-Control-Allow-Credentials': true,
+        },
+        // --- END OF FIX ---
         body: JSON.stringify(error),
       };
     });
