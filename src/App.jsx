@@ -7,7 +7,6 @@ import CitySearch from './components/CitySearch';
 import EventList from './components/EventList';
 import { getEvents, extractLocations } from './api';
 
-import * as atatus from 'atatus-spa'; // <-- 1. IMPORT ATATUS
 
 function App() {
   // All authentication-related state and functions have been removed.
@@ -18,13 +17,7 @@ function App() {
 
   // This useEffect now only focuses on fetching data.
   useEffect(() => {
-    // --- 2. ADD THIS TEST CODE ---
-    // THIS SENDS A TEST ERROR TO YOUR ATATUS DASHBOARD TO VERIFY SETUP.
-    atatus.notify(new Error('Test Atatus Setup - It works!'));
-    // --- END OF TEST CODE ---
-
-
-
+ 
     const fetchData = async () => {
       const allEvents = await getEvents();
       setAllLocations(extractLocations(allEvents));
