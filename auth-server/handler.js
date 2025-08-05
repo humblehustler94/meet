@@ -81,6 +81,19 @@ module.exports.getAccessToken = async (event) => {
 // --- Start of new code for STEP 3: INTERGRATE THE ACCESS TOKEN IN YOUR NEW getCalendarEvents() Function. ---
 module.exports.getCalendarEvents = async (event) => {
 
+  // --- FIX: ADDED THIS BLOCK TO HANDLE PRE-FLIGHT OPTIONS REQUESTS ---
+  if(event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    };
+  }
+  // --- END OF FIX ---
+
   // The access_token will be passed in the path parameter
   // Get the access_token from the parameter
   const access_token = decodeURIComponent(event.pathParameters.access_token);
