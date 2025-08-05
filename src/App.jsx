@@ -7,6 +7,7 @@ import CitySearch from './components/CitySearch';
 import EventList from './components/EventList';
 import { getEvents, extractLocations } from './api';
 
+
 function App() {
   // All authentication-related state and functions have been removed.
   const [events, setEvents] = useState([]);
@@ -16,6 +17,7 @@ function App() {
 
   // This useEffect now only focuses on fetching data.
   useEffect(() => {
+ 
     const fetchData = async () => {
       const allEvents = await getEvents();
       setAllLocations(extractLocations(allEvents));
