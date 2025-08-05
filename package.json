@@ -13,6 +13,7 @@
     "test:coverage": "cross-env NODE_NO_WARNINGS=1 jest --coverage"
   },
   "dependencies": {
+    "atatus-spa": "^4.6.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
