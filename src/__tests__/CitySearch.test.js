@@ -11,9 +11,11 @@ import App from '../App'; // 2. Import the App component
 describe('<CitySearch /> component', () => {
     // --- Test for the edge case where the prop is missing ---
     // This test lives at the top level of the describe block.
+
+    // --- Change #1 ---
     test('does not crash when allLocations prop is not provided', async () => {
         const user = userEvent.setup();
-        render(<CitySearch />); // This test has its own render call.
+        render(<CitySearch setInfoAlert={() => { }} />); // This test has its own render call. // <-- Add the prop here
 
         const cityTextBox = screen.getByRole('textbox');
         await user.type(cityTextBox, "a");
@@ -36,7 +38,11 @@ describe('<CitySearch /> component', () => {
         // This beforeEach only applies to tests inside THIS describe block.
         beforeEach(() => {
             setCurrentCityMock = jest.fn();
-            render(<CitySearch allLocations={allLocations} setCurrentCity={setCurrentCityMock} />);
+            render(<CitySearch 
+                allLocations={allLocations} 
+                setCurrentCity={setCurrentCityMock}
+                setInfoAlert={() => {}} // <-- Add this line Prop added here
+                />);
         });
 
         test('renders text input', () => {

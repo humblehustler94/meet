@@ -1,6 +1,6 @@
 import { useState } from 'react'; // We no longer need useEffect
 
-const CitySearch = ({ allLocations, setCurrentCity }) => {
+const CitySearch = ({ allLocations, setCurrentCity, setInfoAlert }) => { // <-- 1. Prop received
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [query, setQuery] = useState("");
     // The 'suggestions' state and the 'useEffect' hook have been removed.
@@ -12,21 +12,34 @@ const CitySearch = ({ allLocations, setCurrentCity }) => {
             location.toUpperCase().indexOf(query.toUpperCase()) > -1
           )
         : [];
-
+        // --- Refactor code here ---
+        // <-- 2. Function updated
     const handleInputChanged = (event) => {
         const value = event.target.value;
+        const filteredLocations = allLocations ? allLocations.filter((location) => 
+
+            location.toUpperCase().indexOf(value.toUpperCase()) > -1
+        ) : [];
+
         setQuery(value);
         // Ensure suggestions are shown when the user is typing.
         setShowSuggestions(true);
+
+        let infoText;
+        if(filteredLocations.length === 0 ) {
+            infoText = "We can not find the city you are looking for. Please try another city";
+        } else {
+            infoText = "";
+        }
+        setInfoAlert(infoText);
     };
 
+    // <-- Function updated
     const handleItemClicked = (suggestion) => {
         setQuery(suggestion);
         setShowSuggestions(false); // Hide the list after selection
-        // Make sure setCurrentCity is being called
-        if(setCurrentCity) {
-            setCurrentCity(suggestion);
-        }
+        setCurrentCity(suggestion);
+        setInfoAlert(""); // Clears the alert on successful selection
     };
 
     return (
