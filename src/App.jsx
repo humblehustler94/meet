@@ -1,4 +1,6 @@
 // src/App.jsx
+import  { InfoAlert, ErrorAlert } from './components/Alert'; // <-- Added new import to App.jsx file
+
 
 import { useState, useEffect } from 'react';
 import './App.css';
@@ -14,6 +16,8 @@ function App() {
   const [numberOfEvents, setNumberOfEvents] = useState(32);
   const [allLocations, setAllLocations] = useState([]);
   const [currentCity, setCurrentCity] = useState("See all cities");
+  const [infoAlert, setInfoAlert] = useState(""); // <--  1. STATE ADDED
+  const [errorAlert, setErrorAlert] = useState("");
 
   // This useEffect now only focuses on fetching data.
   useEffect(() => {
@@ -33,13 +37,25 @@ function App() {
 
   return (
     <div className="App" role="main">
+      {/* 2. ALERT CONTAINER ADDED --- ADD THIS NEW BLOCK ---  */}
+      <div className="alerts-container">
+        {infoAlert.length ? <InfoAlert text={infoAlert} /> : null}
+        {errorAlert.length ? <ErrorAlert text={errorAlert} /> : null} {/*<-- Added this new line of code */}
+      </div>
+      {/* -------- END OF BLOCK --------- */}
+
+
       <h1>Meet App</h1>
 
       <CitySearch
         allLocations={allLocations}
         setCurrentCity={setCurrentCity}
+        setInfoAlert={setInfoAlert} // <-- 3. PROP PASSED
       />
-      <NumberOfEvents setNumberOfEvents={setNumberOfEvents} />
+      <NumberOfEvents 
+      setNumberOfEvents={setNumberOfEvents}
+      setErrorAlert={setErrorAlert} // <-- Add this Prop here
+      />
 
       {/* The conditional auth JSX has been removed. */}
 
