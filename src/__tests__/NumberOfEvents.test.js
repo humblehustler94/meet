@@ -9,7 +9,7 @@ describe('<NumberOfEvents /> component', () => {
   // Test 1: Check for the textbox role.
   test('contains an element with the role of "textbox"', () => {
     // Provide a mock function as the prop. An empty function is fine here.
-    render(<NumberOfEvents setNumberOfEvents={() => { }} />);
+    render(<NumberOfEvents setNumberOfEvents={() => { }} setErrorAlert={() => { }} />);
     const textbox = screen.getByRole('textbox');
     expect(textbox).toBeInTheDocument();
   });
@@ -17,7 +17,7 @@ describe('<NumberOfEvents /> component', () => {
   // Test 2: Check the default value.
   test('default value of the input field is 32', () => {
     // Also provide the mock prop here.
-    render(<NumberOfEvents setNumberOfEvents={() => { }} />);
+    render(<NumberOfEvents setNumberOfEvents={() => { }} setErrorAlert={() => { }} />);
     const textbox = screen.getByRole('textbox');
     // Using `toHaveValue` on an input with `defaultValue` is correct.
     expect(textbox).toHaveValue('32');
@@ -31,7 +31,10 @@ describe('<NumberOfEvents /> component', () => {
     const mockSetNumberOfEvents = jest.fn();
 
     // 2. Render the component and pass the mock function as the prop.
-    render(<NumberOfEvents setNumberOfEvents={mockSetNumberOfEvents} />);
+    render(<NumberOfEvents 
+      setNumberOfEvents={mockSetNumberOfEvents}
+      setErrorAlert={() => { }}
+      />);
     const textbox = screen.getByRole('textbox');
 
     // 3. Simulate the user typing "10". We don't need to clear first
