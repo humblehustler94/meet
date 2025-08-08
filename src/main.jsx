@@ -7,7 +7,7 @@ import App from './App.jsx'
 import './index.css'
 
 // 1. IMPORT THE SERVICE WORKER REGISTRATION MODULE 
-import * as serviceWorkerRegistration from './serviceWorkerRegistration.js';
+//import * as serviceWorkerRegistration from './serviceWorkerRegistration.js';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -18,4 +18,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
 // 2. CALL THE REGISTER FUNCTION
 // This will enable the service worker in the production enironment.
-serviceWorkerRegistration.register();
+//serviceWorkerRegistration.register();
