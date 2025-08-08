@@ -1,4 +1,5 @@
 /* src/App.css */
+@import 'nprogress/nprogress.css';
 
 /* --- General App & Layout Styles --- */
 body {
