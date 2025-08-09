@@ -1,5 +1,5 @@
 // src/App.jsx
-import  { InfoAlert, ErrorAlert } from './components/Alert'; // <-- Added new import to App.jsx file
+import  { InfoAlert, ErrorAlert, WarningAlert } from './components/Alert'; // <-- Added new import to App.jsx file
 
 
 import { useState, useEffect } from 'react';
@@ -18,22 +18,35 @@ function App() {
   const [currentCity, setCurrentCity] = useState("See all cities");
   const [infoAlert, setInfoAlert] = useState(""); // <--  1. STATE ADDED
   const [errorAlert, setErrorAlert] = useState("");
+  // ADD NEW STATE
+  const [warningAlert, setWarningAlert] = useState("");
 
   // This useEffect now only focuses on fetching data.
-  useEffect(() => {
- 
-    const fetchData = async () => {
-      const allEvents = await getEvents();
-      setAllLocations(extractLocations(allEvents));
-      setEvents(allEvents);
-    };
-    fetchData();
-  }, []);
+ useEffect(() => {
+  // This logic checks the online status and sets the warning message.
+  if(navigator.onLine) {
+    setWarningAlert("");
+  } else {
+    setWarningAlert("You are offline. The displayed event list may not be up to date.");
+  }
+  
+  const fetchData = async () => {
+    const allEvents = await getEvents();
+    const filteredEvents = currentCity === "See all cities"
+    ? allEvents
+    : allEvents.filter(event => event.location === currentCity);
+  setEvents(filteredEvents.slice(0, numberOfEvents)); // Filter and slice before setting state
+  setAllLocations(extractLocations(allEvents));
+  };
+
+  fetchData();
+ },[currentCity, numberOfEvents]); // the dependency array is updated
 
   // Filtering logic remains the same.
-  const filteredEvents = currentCity === "See all cities"
+  /*const filteredEvents = currentCity === "See all cities"
     ? events
-    : events.filter(event => event.location === currentCity);
+    : events.filter(event => event.location === currentCity); 
+    */
 
   return (
     <div className="App" role="main">
@@ -41,6 +54,7 @@ function App() {
       <div className="alerts-container">
         {infoAlert.length ? <InfoAlert text={infoAlert} /> : null}
         {errorAlert.length ? <ErrorAlert text={errorAlert} /> : null} {/*<-- Added this new line of code */}
+        {warningAlert.length ? <WarningAlert text={warningAlert} /> : null}
       </div>
       {/* -------- END OF BLOCK --------- */}
 
@@ -59,7 +73,7 @@ function App() {
 
       {/* The conditional auth JSX has been removed. */}
 
-      <EventList events={filteredEvents.slice(0, numberOfEvents)} />
+      <EventList events={events} />
     </div>
   );
 }

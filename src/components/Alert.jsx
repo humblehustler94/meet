@@ -1,6 +1,6 @@
 // src/components/Alert.jsx
 
-import { Component } from 'react';
+import { Component, useEffect, useState } from 'react';
 
 class Alert extends Component {
   constructor(props) {
@@ -51,4 +51,27 @@ class ErrorAlert extends Alert {
   }
 }
 
-export { InfoAlert, ErrorAlert };
+const WarningAlert = ({ text }) => {
+  const [show, setShow] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShow(false);
+    }, 5000); // The alert will disappear after 5 seconds
+
+    return() => {
+      clearTimeout(timeout);
+    };
+  }, [text]);
+
+  if(text && show) {
+    return (
+      <p className="Alert warning-alert">
+        {text}
+      </p>
+    );
+  }
+  return null;
+};
+
+export { InfoAlert, ErrorAlert, WarningAlert }; // Make sure you export WarningAlert
