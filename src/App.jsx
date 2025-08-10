@@ -7,6 +7,7 @@ import './App.css';
 import NumberOfEvents from './components/NumberOfEvents';
 import CitySearch from './components/CitySearch';
 import EventList from './components/EventList';
+import CityEventsChart from './components/CityEventsChart'; // <-- Added new import
 import { getEvents, extractLocations } from './api';
 
 
@@ -40,7 +41,10 @@ function App() {
   };
 
   fetchData();
- },[currentCity, numberOfEvents]); // the dependency array is updated
+ },[currentCity, numberOfEvents]); // the dependency array is update
+
+ // --- ADD THIS DEBUGGING LOG ---
+ console.log("App.jsx State:", {events, allLocations});
 
   // Filtering logic remains the same.
   /*const filteredEvents = currentCity === "See all cities"
@@ -70,6 +74,11 @@ function App() {
       setNumberOfEvents={setNumberOfEvents}
       setErrorAlert={setErrorAlert} // <-- Add this Prop here
       />
+      {/* --- ADD THIS NEW BLOCK --- */}
+      <div className="charts-container">
+        <CityEventsChart allLocations={allLocations} events={events} />
+      </div>
+      {/* --- END OF BLOCK --- */}
 
       {/* The conditional auth JSX has been removed. */}
 

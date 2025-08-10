@@ -153,6 +153,13 @@ body {
   border-top: 1px solid #eee; /* A separator line for the details */
 }
 
+.charts-container {
+  width: 90%;
+  height: 400px;
+  margin: 20px auto;
+  
+}
+
 /* --- Alerts --- */
 .alerts-container {
     position: fixed;
