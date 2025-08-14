@@ -9,7 +9,10 @@ const EventGenresChart = ({ events }) => {
   const colors = ['#DD0000', '#00DD00', '#0000DD', '#DDDD00', '#DD00DD'];
 
   useEffect(() => {
-    setData(getData());
+    //setData(getData());
+    if(events && events.length > 0) {
+      setData(getData());
+    }
   }, [events]);
 
   const getData = () => {
