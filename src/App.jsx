@@ -8,6 +8,7 @@ import NumberOfEvents from './components/NumberOfEvents';
 import CitySearch from './components/CitySearch';
 import EventList from './components/EventList';
 import CityEventsChart from './components/CityEventsChart'; // <-- Added new import
+import EventGenresChart from './components/EventGenresChart';
 import { getEvents, extractLocations } from './api';
 
 
@@ -76,6 +77,7 @@ function App() {
       />
       {/* --- ADD THIS NEW BLOCK */}
       <div className="charts-container" data-testid="charts-container">
+        <EventGenresChart events={events} />
         <CityEventsChart allLocations={allLocations} events={events} />
       </div>
       {/* --- END OF BLOCK --- */}
