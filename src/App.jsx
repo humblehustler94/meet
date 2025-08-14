@@ -44,7 +44,7 @@ function App() {
  },[currentCity, numberOfEvents]); // the dependency array is update
 
  // --- ADD THIS DEBUGGING LOG ---
- console.log("App.jsx State:", {events, allLocations});
+//console.log("App.jsx State:", {events, allLocations});
 
   // Filtering logic remains the same.
   /*const filteredEvents = currentCity === "See all cities"
@@ -74,8 +74,8 @@ function App() {
       setNumberOfEvents={setNumberOfEvents}
       setErrorAlert={setErrorAlert} // <-- Add this Prop here
       />
-      {/* --- ADD THIS NEW BLOCK --- */}
-      <div className="charts-container">
+      {/* --- ADD THIS NEW BLOCK */}
+      <div className="charts-container" data-testid="charts-container">
         <CityEventsChart allLocations={allLocations} events={events} />
       </div>
       {/* --- END OF BLOCK --- */}

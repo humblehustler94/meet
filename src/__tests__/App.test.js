@@ -25,6 +25,7 @@ describe('<App /> component', () => {
     const numberOfEventsElement = screen.getByTestId('number-of-events');
     expect(numberOfEventsElement).toBeInTheDocument();
   });
+
 });
 
 // --- INTEGRATION TESTS ---
@@ -51,12 +52,16 @@ describe('<App /> integration', () => {
 
   // --- THIS IS THE NEWLY ADDED TEST ---
   test('the number of events rendered matches the number specified by the user', async () => {
-    const user = userEvent.setup();
+     const user = userEvent.setup();
     render(<App />);
+    // Wait for the initial events to load
     await screen.findAllByRole('listitem');
     const numberOfEventsInput = screen.getByTestId('number-of-events-input');
-    await user.type(numberOfEventsInput, "{backspace}{backspace}10");
-    const allRenderedEventItems = screen.getAllByRole('listitem');
+    // Clear the input and type '10'
+    await user.clear(numberOfEventsInput);
+    await user.type(numberOfEventsInput, "10");
+    const allRenderedEventItems = await screen.findAllByRole('listitem');
     expect(allRenderedEventItems.length).toBe(10);
+
   });
 });
