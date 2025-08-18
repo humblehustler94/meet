@@ -1,5 +1,5 @@
 // src/App.jsx
-import  { InfoAlert, ErrorAlert, WarningAlert } from './components/Alert'; // <-- Added new import to App.jsx file
+import { InfoAlert, ErrorAlert, WarningAlert } from './components/Alert'; // <-- Added new import to App.jsx file
 
 
 import { useState, useEffect } from 'react';
@@ -7,6 +7,8 @@ import './App.css';
 import NumberOfEvents from './components/NumberOfEvents';
 import CitySearch from './components/CitySearch';
 import EventList from './components/EventList';
+import CityEventsChart from './components/CityEventsChart'; // <-- Added new import
+import EventGenresChart from './components/EventGenresChart';
 import { getEvents, extractLocations } from './api';
 
 
@@ -22,25 +24,28 @@ function App() {
   const [warningAlert, setWarningAlert] = useState("");
 
   // This useEffect now only focuses on fetching data.
- useEffect(() => {
-  // This logic checks the online status and sets the warning message.
-  if(navigator.onLine) {
-    setWarningAlert("");
-  } else {
-    setWarningAlert("You are offline. The displayed event list may not be up to date.");
-  }
-  
-  const fetchData = async () => {
-    const allEvents = await getEvents();
-    const filteredEvents = currentCity === "See all cities"
-    ? allEvents
-    : allEvents.filter(event => event.location === currentCity);
-  setEvents(filteredEvents.slice(0, numberOfEvents)); // Filter and slice before setting state
-  setAllLocations(extractLocations(allEvents));
-  };
+  useEffect(() => {
+    // This logic checks the online status and sets the warning message.
+    if (navigator.onLine) {
+      setWarningAlert("");
+    } else {
+      setWarningAlert("You are offline. The displayed event list may not be up to date.");
+    }
 
-  fetchData();
- },[currentCity, numberOfEvents]); // the dependency array is updated
+    const fetchData = async () => {
+      const allEvents = await getEvents();
+      const filteredEvents = currentCity === "See all cities"
+        ? allEvents
+        : allEvents.filter(event => event.location === currentCity);
+      setEvents(filteredEvents.slice(0, numberOfEvents)); // Filter and slice before setting state
+      setAllLocations(extractLocations(allEvents));
+    };
+
+    fetchData();
+  }, [currentCity, numberOfEvents]); // the dependency array is update
+
+  // --- ADD THIS DEBUGGING LOG ---
+  //console.log("App.jsx State:", {events, allLocations});
 
   // Filtering logic remains the same.
   /*const filteredEvents = currentCity === "See all cities"
@@ -66,10 +71,22 @@ function App() {
         setCurrentCity={setCurrentCity}
         setInfoAlert={setInfoAlert} // <-- 3. PROP PASSED
       />
-      <NumberOfEvents 
-      setNumberOfEvents={setNumberOfEvents}
-      setErrorAlert={setErrorAlert} // <-- Add this Prop here
+      <NumberOfEvents
+        setNumberOfEvents={setNumberOfEvents}
+        setErrorAlert={setErrorAlert} // <-- Add this Prop here
       />
+      {/* --- ADD THIS NEW BLOCK */}
+      <div className="charts-container" data-testid="charts-container">
+        <div className="chart-wrapper">
+          <EventGenresChart events={events} />
+        </div>
+        
+        <div className="chart-wrapper">
+           <CityEventsChart allLocations={allLocations} events={events} />
+        </div>
+  
+      </div>
+      {/* --- END OF BLOCK --- */}
 
       {/* The conditional auth JSX has been removed. */}
 

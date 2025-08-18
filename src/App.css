@@ -153,6 +153,22 @@ body {
   border-top: 1px solid #eee; /* A separator line for the details */
 }
 
+.charts-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 20px 0;
+  gap: 20px;
+}
+
+
+.chart-wrapper {
+  flex: 1 1 50%;
+  min-width: 0;
+  position: relative;
+}
+  
+
 /* --- Alerts --- */
 .alerts-container {
     position: fixed;
@@ -185,7 +201,16 @@ body {
   border-radius: 5px;
 }
 
-/* --- Responsive Design for Mobile --- */
+/* --- Responsive Design --- */
+/* For tablets and smaller screens */
+@media (max-width: 768px) {
+  .charts-container {
+    flex-direction: column;
+    height: auto;
+  }
+}
+
+/* For mobile phones */
 @media (max-width: 600px) {
   #root {
     padding: 1rem;

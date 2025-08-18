@@ -1,11 +1,29 @@
+// jest.config.cjs
+
 module.exports = {
- testEnvironment: 'jest-environment-jsdom',
- transform: {
-   '^.+\\.jsx?$': 'babel-jest', // Transform JavaScript and JSX files using Babel
- },
- moduleNameMapper: {
-   '\\.(css|less|scss|sass)$': 'identity-obj-proxy', // Mock CSS imports
- },
- moduleFileExtensions: ['js', 'jsx'],
- setupFilesAfterEnv: ['<rootDir>/setupTests.js'], // Path to the setup file // <-- THIS IS THE CONNECTION IN STEP 4.
+  projects: [
+    // --- PROJECT 1: For React component tests ---
+    {
+      displayName: 'dom',
+      testEnvironment: 'jest-environment-jsdom',
+      testMatch: ['<rootDir>/src/**/*.test.js?(x)'],
+      // ADD THIS LINE to explicitly ignore the E2E test
+      testPathIgnorePatterns: ['<rootDir>/src/__tests__/EndToEnd.test.js'],
+      setupFilesAfterEnv: ['<rootDir>/setupTests.js'],
+      moduleNameMapper: {
+        '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+      },
+      transform: {
+        '^.+\\.jsx?$': 'babel-jest',
+      },
+    },
+
+    // --- PROJECT 2: For End-to-End (Puppeteer) tests ---
+    {
+      displayName: 'node',
+      testEnvironment: 'node',
+      // This pattern is correct, it only targets the E2E test
+      testMatch: ['<rootDir>/src/__tests__/EndToEnd.test.js'],
+    },
+  ],
 };

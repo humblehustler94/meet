@@ -1,6 +1,9 @@
+
 /** @jest-environment node */
 
+
 import puppeteer from 'puppeteer';
+
 
 // ====================================================================
 //      TOP-LEVEL SETUP (APPLIES TO ALL `describe` BLOCKS)
@@ -79,7 +82,16 @@ describe('filter events by city', () => {
     await page.click('.suggestions li');
     await page.waitForSelector('.suggestions', { hidden: true });
 
-    const expectedEventCount = 17;
+    // --- THIS IS THE CORRECTED LOGIC ---
+    const mockData = require('../mock-data');
+
+    //console.log('--- INSPECTING mockData ---', mockData);
+
+    // --- REPLACE THE HARD-CODED NUMBER WITH THIS LOGIC ---
+    const berlinEvents = mockData.default.filter(event => event.location === 'Berlin, Germany');
+    const expectedEventCount = berlinEvents.length;
+    // -----------------------------------------------------
+
     await page.waitForFunction((count) => {
       const events = document.querySelectorAll('.event');
       return events.length === count;

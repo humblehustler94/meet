@@ -39,5 +39,5 @@ describe('<EventList /> integration', () => {
         // number of rendered list items matches this.
         expect(eventListItems.length).toBe(32);
     });
-});
 
+});
