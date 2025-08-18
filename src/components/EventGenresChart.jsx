@@ -39,21 +39,27 @@ const EventGenresChart = ({ events }) => {
         textAnchor={x > cx ? 'start' : 'end'}
         dominantBaseline="central"
       >
-        {`${(percent * 100).toFixed(0)}%`}
+        {`${genres[index]} ${(percent * 100).toFixed(0)}%`}
       </text>
     ) : null;
   };
 
   return (
     <ResponsiveContainer width="99%" height={400}>
-      <PieChart>
+      <PieChart
+      margin={{
+        top: 20,
+        right: 20,
+        bottom: 20,
+        left: 20,
+      }}>
         <Pie
           data={data}
           dataKey="value"
           fill="#8884d8"
           labelLine={false}
           label={renderCustomizedLabel}
-          outerRadius={130}           
+          outerRadius={150}           
         >
           {
             data.map((entry, index) => (
