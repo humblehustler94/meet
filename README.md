@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<!-- TODO: Add project logo (e.g., in public/assets or docs/) -->
+![Meet App Logo](public/meet-app.svg)<!-- TODO: Add project logo (e.g., in public/assets or docs/) -->
 
 [![GitHub stars](https://img.shields.io/github/stars/humblehustler94/meet?style=for-the-badge)](https://github.com/humblehustler94/meet/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/humblehustler94/meet?style=for-the-badge)](https://github.com/humblehustler94/meet/network)
