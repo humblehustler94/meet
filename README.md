@@ -39,6 +39,7 @@ This project demonstrates a robust full-stack approach with a React frontend bui
 <!-- TODO: Add actual screenshots of the application, including desktop and mobile views -->
 <!-- ![Desktop Screenshot 1](docs/screenshots/desktop-1.png) -->
 <!-- ![Mobile Screenshot 1](docs/screenshots/mobile-1.png) -->
+![Desktop Screenshot](public/meet-app-view.png)
 
 ## 🛠️ Tech Stack
 
